@@ -1,0 +1,48 @@
+{%extends "layout.html"%}
+{% set active_page = "index" %}
+{%block content%}
+<div class="container-fluid d-flex align-items-center flex-column bg-light h-100 flex-grow-1 ">
+    <div class="card">
+        <div class="card-body">
+            <form onSubmit="getResults(input.value);return false;">
+                <label for="basic-url">Enter URL</label>
+                <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span style="font-size: x-small;" class="input-group-text" id="basic-addon3">www.reddit.com/</span>
+                </div>
+                <input autocomplete="off" type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" name="input">
+                </div>
+                <p id="error" style="color:#ff4500;">*Please enter valid Link.</p>
+                <button type="submit" class="btn text-white" style="background: #ff4500;">Submit</button>
+            </form>
+        </div>
+    </div>
+    <div class="card" id="result">
+        <div class="card-body">
+            <div style="border-width: 0;
+                        border-color: #e4e4e4;
+                        border-bottom-width: 1.2px;
+                        border-style: solid;
+                        padding: 3% 2%;">
+                <div>
+                    <h4 style="color: #b5b5b5;">Most Probable Flair</h4>
+                </div>
+                <div id="first" class="flair">
+                    <span>0</span>
+                </div>
+            </div>
+            <div style="padding: 3% 2%;">
+                <div>
+                    <h5 style="color: #b5b5b5;">Other Probable Flairs</h5>
+                </div>
+                <div id="second" class="flair">
+                    <span>1</span>
+                </div>
+                <div id="third" class="flair">
+                    <span>2</span>
+                </div>
+            </div>
+        </div>  
+    </div>
+</div>
+{%endblock%}
