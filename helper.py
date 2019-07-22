@@ -15,8 +15,8 @@ from nltk.stem.porter import PorterStemmer
 
 
 # Config env
-clientID = os.environ.get('CLIENT_ID', 'None')
-clientSECRET = os.environ.get('CLIENT_SECRET', 'None')
+clientID = os.environ.get('CLIENT_ID', 'yZARbXnKMZSC8A')
+clientSECRET = os.environ.get('CLIENT_SECRET', 'THo9Klp-9op3nWIBd0PX382Ya4w')
 
 # Praw Session Initialized
 reddit = praw.Reddit(client_id=clientID,
@@ -105,14 +105,10 @@ def getPostDetails(redditUrl, dataDictionary):
             commentText += str(comment.body)+' '
     
     submission = req['data'][0]
-    dataDictionary['author_fullname'].append(str(submission.setdefault('author_fullname', 'null')))
     dataDictionary['created_utc'].append(submission.setdefault('created_utc', 0))
     dataDictionary['domain'].append(str(submission.setdefault('domain', 'null')))
-    dataDictionary['is_crosspostable'].append(submission.setdefault('is_crosspostable', 'false'))
     dataDictionary['is_reddit_media_domain'].append(submission.setdefault('is_reddit_media_domain', 'false'))
-    dataDictionary['post_hint'].append(str(submission.setdefault('post_hint', 'null')))
     dataDictionary['num_comments'].append(submission.setdefault('num_comments', 0))
-    dataDictionary['permalink'].append(str(submission.setdefault('permalink', 'null')))
     dataDictionary['score'].append(submission.setdefault('score', 0))
     dataDictionary['selftext'].append(str(submission.setdefault('selftext', 'null')))
     dataDictionary['title'].append(str(submission.setdefault('title', 'null')))
@@ -122,14 +118,10 @@ def getPostDetails(redditUrl, dataDictionary):
 
 # Main Predictor Function
 def prediction(url):
-    dataDictionary = {'author_fullname': [],
-                      'created_utc' : [],
+    dataDictionary = {'created_utc' : [],
                       'domain' : [],
-                      'is_crosspostable' : [],
                       'is_reddit_media_domain' : [],
-                      'post_hint' : [],
                       'num_comments' : [],
-                      'permalink' : [],
                       'score' : [],
                       'selftext' : [],
                       'title' : [],
@@ -145,8 +137,6 @@ def prediction(url):
         pandasFrame = pd.DataFrame(dataDictionary)
         pandasFrame['created_utc'] = pandasFrame['created_utc'].apply(classifyTime)
         pandasFrame['domain'] = pandasFrame['domain'].apply(splitUrl)
-        pandasFrame['post_hint'] = pandasFrame['post_hint'].apply(cleanText)
-        pandasFrame['permalink'] = pandasFrame['permalink'].apply(splitUrl)
         pandasFrame['selftext'] = pandasFrame['selftext'].apply(cleanText)
         pandasFrame['title'] = pandasFrame['title'].apply(cleanText)
         pandasFrame['url'] = pandasFrame['url'].apply(splitUrl)
@@ -167,7 +157,7 @@ def prediction(url):
         newDF.reset_index(drop=True, inplace=True)
 
         pandasFrame = pd.concat([pandasFrame, newDF], axis=1)
-
+        
         prediction = model.predict_proba(pandasFrame)
         best_3 = np.flip(np.argsort(prediction, axis=1)[:,-3:] ,1)
         best_3 = best_3[0]
